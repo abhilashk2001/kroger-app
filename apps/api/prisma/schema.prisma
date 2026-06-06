@@ -1,6 +1,7 @@
-// Prisma schema. In Phase 1 there are no models yet — just the datasource and
-// generator. The /health check uses a raw `SELECT 1`, which needs no models.
-// Phase 2 adds the households, products, transactions, and users models here.
+// Prisma schema for the Kroger retail data model.
+//
+// Convention: model fields are camelCase (nice in TypeScript) and map to
+// snake_case database columns/tables via @map / @@map.
 
 generator client {
   provider = "prisma-client-js"
@@ -9,4 +10,59 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+/// One row per household. Demographics are optional — many households have none.
+model Household {
+  hshdNum         Int     @id @map("hshd_num")
+  loyaltyFlag     Boolean @map("loyalty_flag")
+  ageRange        String? @map("age_range")
+  marital         String?
+  incomeRange     String? @map("income_range")
+  homeowner       String?
+  hshdComposition String? @map("hshd_composition")
+  hhSize          String? @map("hh_size") // text: values are ranges like "5+"
+  children        String? // text: values are ranges like "3+"
+
+  transactions Transaction[]
+
+  @@map("households")
+}
+
+/// One row per product in the catalog.
+model Product {
+  productNum Int     @id @map("product_num")
+  department String
+  commodity  String
+  brandType  String  @map("brand_type") // PRIVATE | NATIONAL
+  isOrganic  Boolean @map("is_organic")
+
+  transactions Transaction[]
+
+  @@map("products")
+}
+
+/// One row per product purchased, per basket (shopping trip).
+model Transaction {
+  id           Int      @id @default(autoincrement())
+  basketNum    Int      @map("basket_num")
+  hshdNum      Int      @map("hshd_num")
+  productNum   Int      @map("product_num")
+  purchaseDate DateTime @map("purchase_date") @db.Date
+  spend        Decimal  @db.Decimal(10, 2) // money: exact, never float
+  units        Int
+  storeRegion  String   @map("store_region")
+  weekNum      Int      @map("week_num")
+  year         Int
+
+  // Foreign keys: the database enforces that every transaction points at a
+  // real household and a real product.
+  household Household @relation(fields: [hshdNum], references: [hshdNum])
+  product   Product   @relation(fields: [productNum], references: [productNum])
+
+  // Indexes for the lookups later phases run (search, sort, basket analysis).
+  @@index([hshdNum])
+  @@index([basketNum])
+  @@index([productNum])
+  @@map("transactions")
 }

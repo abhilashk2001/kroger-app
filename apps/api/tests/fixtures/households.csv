@@ -1,0 +1,3 @@
+HSHD_NUM,L,AGE_RANGE,MARITAL,INCOME_RANGE,HOMEOWNER,HSHD_COMPOSITION,HH_SIZE,CHILDREN
+10,Y,35-44,Married,50-74K,Homeowner,2 Adults Kids,3,1
+20,N,null,null,null,null,null,null,null
