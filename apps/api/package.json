@@ -7,7 +7,7 @@
     "dev": "tsx watch src/server.ts",
     "start": "tsx src/server.ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "DATABASE_URL=$TEST_DATABASE_URL vitest run",
     "load": "tsx src/scripts/load.ts",
     "pretest": "DATABASE_URL=$TEST_DATABASE_URL prisma migrate deploy",
     "prisma:generate": "prisma generate"

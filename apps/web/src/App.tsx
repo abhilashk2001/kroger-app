@@ -1,69 +1,226 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent, type CSSProperties } from "react";
 
-interface HealthStatus {
-  status: string;
-  database: string;
-  timestamp: string;
+const PAGE_SIZE = 50;
+
+interface PullRow {
+  basketNum: number;
+  purchaseDate: string;
+  productNum: number;
+  department: string;
+  commodity: string;
+  spend: string;
+  units: number;
+  storeRegion: string;
+  weekNum: number;
+  year: number;
+}
+
+interface Pull {
+  hshdNum: number;
+  page: number;
+  pageSize: number;
+  total: number;
+  rows: PullRow[];
+}
+
+function formatDate(iso: string): string {
+  return new Date(iso).toISOString().slice(0, 10);
 }
 
 export default function App() {
-  const [health, setHealth] = useState<HealthStatus | null>(null);
+  const [input, setInput] = useState("");
+  const [household, setHousehold] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
+  const [data, setData] = useState<Pull | null>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Relative URL -> Vite proxies "/api/*" to the API container in dev, and in
-    // production the same path is served by Express at the same origin.
-    fetch("/api/health")
-      .then((res) => res.json())
-      .then((data: HealthStatus) => setHealth(data))
-      .catch((err) => setError(String(err)));
-  }, []);
+    if (household === null) return;
 
-  const ok = health?.status === "ok";
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
+    fetch(`/api/households/${household}/pull?page=${page}&pageSize=${PAGE_SIZE}`)
+      .then(async (res) => {
+        if (res.status === 404) throw new Error(`Household ${household} not found.`);
+        if (!res.ok) throw new Error(`Request failed (${res.status}).`);
+        return res.json();
+      })
+      .then((json: Pull) => {
+        if (!cancelled) setData(json);
+      })
+      .catch((err: Error) => {
+        if (!cancelled) {
+          setData(null);
+          setError(err.message);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [household, page]);
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    const n = Number(input.trim());
+    if (!Number.isInteger(n) || n <= 0) {
+      setError("Enter a valid household number.");
+      setData(null);
+      setHousehold(null);
+      return;
+    }
+    setError(null);
+    setPage(1);
+    setHousehold(n);
+  }
+
+  const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
 
   return (
-    <main
-      style={{
-        fontFamily: "system-ui, sans-serif",
-        padding: "2rem",
-        maxWidth: 640,
-        margin: "0 auto",
-        lineHeight: 1.5,
-      }}
-    >
-      <h1>Kroger Retail Analytics</h1>
+    <main style={styles.main}>
+      <h1>Kroger — Household Data Pull</h1>
       <p style={{ color: "#555" }}>
-        Phase 1 — foundation skeleton. Live frontend ↔ API ↔ database check:
+        Enter a household number to see all of its purchases, sorted by basket, date,
+        product, department, and commodity.
       </p>
 
-      {error && (
-        <div style={{ padding: "1rem", borderRadius: 8, background: "#fce8e6" }}>
-          API unreachable: {error}
-        </div>
-      )}
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <input
+          type="text"
+          inputMode="numeric"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="e.g. 577"
+          style={styles.input}
+        />
+        <button type="submit" style={styles.button}>
+          Search
+        </button>
+      </form>
 
-      {!error && !health && <p>Checking API…</p>}
+      {loading && <p>Loading…</p>}
+      {error && <div style={styles.error}>{error}</div>}
 
-      {health && (
-        <div
-          style={{
-            padding: "1rem 1.25rem",
-            borderRadius: 8,
-            background: ok ? "#e6f4ea" : "#fce8e6",
-            border: `1px solid ${ok ? "#9bcfae" : "#e0a3a0"}`,
-          }}
-        >
-          <div>
-            <strong>API status:</strong> {health.status}
-          </div>
-          <div>
-            <strong>Database:</strong> {health.database}
-          </div>
-          <div>
-            <strong>Checked at:</strong> {health.timestamp}
-          </div>
-        </div>
+      {data && !loading && !error && (
+        <>
+          <p style={{ color: "#555" }}>
+            Household <strong>{data.hshdNum}</strong> — {data.total} line
+            {data.total === 1 ? "" : "s"}
+            {data.total > 0 && (
+              <>
+                {" "}
+                · page {data.page} of {totalPages}
+              </>
+            )}
+          </p>
+
+          {data.total === 0 ? (
+            <p>No purchases found for this household.</p>
+          ) : (
+            <>
+              <div style={{ overflowX: "auto" }}>
+                <table style={styles.table}>
+                  <thead>
+                    <tr>
+                      {["Basket", "Date", "Product #", "Department", "Commodity", "Spend", "Units", "Region", "Week", "Year"].map((h) => (
+                        <th key={h} style={styles.th}>
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.rows.map((r, i) => (
+                      <tr key={i}>
+                        <td style={styles.td}>{r.basketNum}</td>
+                        <td style={styles.td}>{formatDate(r.purchaseDate)}</td>
+                        <td style={styles.td}>{r.productNum}</td>
+                        <td style={styles.td}>{r.department}</td>
+                        <td style={styles.td}>{r.commodity}</td>
+                        <td style={{ ...styles.td, textAlign: "right" }}>
+                          ${Number(r.spend).toFixed(2)}
+                        </td>
+                        <td style={{ ...styles.td, textAlign: "right" }}>{r.units}</td>
+                        <td style={styles.td}>{r.storeRegion}</td>
+                        <td style={{ ...styles.td, textAlign: "right" }}>{r.weekNum}</td>
+                        <td style={styles.td}>{r.year}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div style={styles.pager}>
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={data.page <= 1}
+                  style={styles.button}
+                >
+                  ← Prev
+                </button>
+                <span>
+                  Page {data.page} of {totalPages}
+                </span>
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={data.page >= totalPages}
+                  style={styles.button}
+                >
+                  Next →
+                </button>
+              </div>
+            </>
+          )}
+        </>
       )}
     </main>
   );
 }
+
+const styles: Record<string, CSSProperties> = {
+  main: {
+    fontFamily: "system-ui, sans-serif",
+    padding: "2rem",
+    maxWidth: 960,
+    margin: "0 auto",
+    lineHeight: 1.5,
+  },
+  form: { display: "flex", gap: "0.5rem", margin: "1rem 0" },
+  input: {
+    padding: "0.5rem 0.75rem",
+    fontSize: "1rem",
+    border: "1px solid #ccc",
+    borderRadius: 6,
+    width: 200,
+  },
+  button: {
+    padding: "0.5rem 1rem",
+    fontSize: "1rem",
+    border: "1px solid #4a7",
+    background: "#4a7",
+    color: "white",
+    borderRadius: 6,
+    cursor: "pointer",
+  },
+  error: {
+    padding: "0.75rem 1rem",
+    borderRadius: 6,
+    background: "#fce8e6",
+    border: "1px solid #e0a3a0",
+  },
+  table: { borderCollapse: "collapse", width: "100%", fontSize: "0.9rem" },
+  th: {
+    textAlign: "left",
+    borderBottom: "2px solid #ddd",
+    padding: "0.4rem 0.6rem",
+    whiteSpace: "nowrap",
+  },
+  td: { borderBottom: "1px solid #eee", padding: "0.35rem 0.6rem", whiteSpace: "nowrap" },
+  pager: { display: "flex", gap: "1rem", alignItems: "center", marginTop: "1rem" },
+};
