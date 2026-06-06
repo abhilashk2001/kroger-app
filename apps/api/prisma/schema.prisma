@@ -1,0 +1,12 @@
+// Prisma schema. In Phase 1 there are no models yet — just the datasource and
+// generator. The /health check uses a raw `SELECT 1`, which needs no models.
+// Phase 2 adds the households, products, transactions, and users models here.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}

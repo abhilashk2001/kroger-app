@@ -1,0 +1,17 @@
+{
+  "name": "kroger-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend-focused retail analytics on the 84.51/Kroger Complete Journey dataset",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "docker compose up --build",
+    "down": "docker compose down"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
