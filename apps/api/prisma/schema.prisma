@@ -77,3 +77,32 @@ model User {
 
   @@map("users")
 }
+
+/// Market-basket association rules (commodity level), precomputed offline by
+/// ml/basket_analysis.py. antecedents/consequents are comma-joined commodity lists
+/// (stored as text — simpler to write from pandas than a Postgres array).
+model BasketRule {
+  id          Int      @id @default(autoincrement())
+  antecedents String
+  consequents String
+  support     Float
+  confidence  Float
+  lift        Float
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("basket_rules")
+}
+
+/// Evaluation summary for the Gradient Boosting co-purchase model (one row per
+/// target commodity). top_drivers is a comma-joined list of the most important
+/// co-purchase commodities.
+model BasketModelMetric {
+  id              Int      @id @default(autoincrement())
+  targetCommodity String   @map("target_commodity")
+  accuracy        Float
+  rocAuc          Float    @map("roc_auc")
+  topDrivers      String   @map("top_drivers")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("basket_model_metric")
+}

@@ -4,8 +4,9 @@ import AuthPage from "./AuthPage";
 import HouseholdSearch from "./HouseholdSearch";
 import LoadData from "./LoadData";
 import Dashboard from "./Dashboard";
+import BasketAnalysis from "./BasketAnalysis";
 
-type View = "search" | "load" | "dashboard";
+type View = "search" | "load" | "dashboard" | "basket";
 
 function Shell() {
   const { user, loading, logout } = useAuth();
@@ -52,11 +53,18 @@ function Shell() {
         >
           Dashboard
         </button>
+        <button
+          onClick={() => setView("basket")}
+          style={view === "basket" ? styles.tabActive : styles.tab}
+        >
+          Basket Analysis
+        </button>
       </nav>
 
       {view === "search" && <HouseholdSearch />}
       {view === "load" && <LoadData />}
       {view === "dashboard" && <Dashboard />}
+      {view === "basket" && <BasketAnalysis />}
     </main>
   );
 }

@@ -33,3 +33,10 @@ project-breif/data-sources/*.csv
 
 # Prisma local artifacts
 *.db
+
+# Python (ML jobs)
+__pycache__/
+*.pyc
+.pytest_cache/
+# Generated analysis artifacts (charts, reports) — not version-controlled.
+ml/reports/
