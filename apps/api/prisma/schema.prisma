@@ -66,3 +66,14 @@ model Transaction {
   @@index([productNum])
   @@map("transactions")
 }
+
+/// Application users for authentication.
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}

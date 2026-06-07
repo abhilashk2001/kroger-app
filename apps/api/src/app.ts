@@ -4,6 +4,8 @@
 import express from "express";
 import { healthRouter } from "./modules/health/health.controller";
 import { householdsRouter } from "./modules/households/households.controller";
+import { authRouter } from "./modules/auth/auth.controller";
+import { requireAuth } from "./modules/auth/auth.middleware";
 
 export function createApp() {
   const app = express();
@@ -14,7 +16,9 @@ export function createApp() {
   // In production the React build is served at the root, with the API under /api,
   // so the frontend uses the same relative URLs in dev and prod.
   app.use("/api/health", healthRouter);
-  app.use("/api/households", householdsRouter);
+  app.use("/api/auth", authRouter);
+  // The household data pull is protected: a valid bearer token is required.
+  app.use("/api/households", requireAuth, householdsRouter);
 
   return app;
 }

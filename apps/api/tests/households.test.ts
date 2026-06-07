@@ -1,6 +1,6 @@
-// Integration test for the household pull endpoint, at the HTTP seam. Runs against
-// the test database (DATABASE_URL is pointed there by the test script) with a small
-// fixture loaded in setup.
+// Integration test for the household pull endpoint, at the HTTP seam. The route is
+// now protected, so we register a user and send the bearer token. Runs against the
+// test database with a small fixture loaded in setup.
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import path from "node:path";
@@ -18,23 +18,38 @@ const fixtures = {
 };
 
 const app = createApp();
+let authHeader: string;
 
 describe("GET /api/households/:hshdNum/pull", () => {
   beforeAll(async () => {
     await loadAll(prisma, fixtures);
+    await prisma.user.deleteMany();
+    const res = await request(app).post("/api/auth/register").send({
+      username: "hh_tester",
+      email: "hh_tester@example.com",
+      password: "password123",
+    });
+    authHeader = `Bearer ${res.body.token}`;
   });
 
   afterAll(async () => {
+    await prisma.user.deleteMany();
     await prisma.$disconnect();
   });
 
-  it("returns the household's purchases sorted by the required keys", async () => {
+  it("requires authentication", async () => {
     const res = await request(app).get("/api/households/10/pull");
+    expect(res.status).toBe(401);
+  });
+
+  it("returns the household's purchases sorted by the required keys", async () => {
+    const res = await request(app)
+      .get("/api/households/10/pull")
+      .set("Authorization", authHeader);
 
     expect(res.status).toBe(200);
     expect(res.body.hshdNum).toBe(10);
     expect(res.body.total).toBe(2);
-    // basket 1, products 100 then 200 (sorted by product number within the basket)
     expect(res.body.rows.map((r: { productNum: number }) => r.productNum)).toEqual([
       100, 200,
     ]);
@@ -46,7 +61,9 @@ describe("GET /api/households/:hshdNum/pull", () => {
   });
 
   it("paginates with page metadata", async () => {
-    const res = await request(app).get("/api/households/10/pull?page=1&pageSize=1");
+    const res = await request(app)
+      .get("/api/households/10/pull?page=1&pageSize=1")
+      .set("Authorization", authHeader);
 
     expect(res.status).toBe(200);
     expect(res.body.pageSize).toBe(1);
@@ -55,12 +72,16 @@ describe("GET /api/households/:hshdNum/pull", () => {
   });
 
   it("returns 404 for an unknown household", async () => {
-    const res = await request(app).get("/api/households/999999/pull");
+    const res = await request(app)
+      .get("/api/households/999999/pull")
+      .set("Authorization", authHeader);
     expect(res.status).toBe(404);
   });
 
   it("returns 400 for a non-numeric household", async () => {
-    const res = await request(app).get("/api/households/abc/pull");
+    const res = await request(app)
+      .get("/api/households/abc/pull")
+      .set("Authorization", authHeader);
     expect(res.status).toBe(400);
   });
 });
