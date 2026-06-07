@@ -3,8 +3,9 @@ import { AuthProvider, useAuth } from "./AuthContext";
 import AuthPage from "./AuthPage";
 import HouseholdSearch from "./HouseholdSearch";
 import LoadData from "./LoadData";
+import Dashboard from "./Dashboard";
 
-type View = "search" | "load";
+type View = "search" | "load" | "dashboard";
 
 function Shell() {
   const { user, loading, logout } = useAuth();
@@ -45,9 +46,17 @@ function Shell() {
         >
           Load Data
         </button>
+        <button
+          onClick={() => setView("dashboard")}
+          style={view === "dashboard" ? styles.tabActive : styles.tab}
+        >
+          Dashboard
+        </button>
       </nav>
 
-      {view === "search" ? <HouseholdSearch /> : <LoadData />}
+      {view === "search" && <HouseholdSearch />}
+      {view === "load" && <LoadData />}
+      {view === "dashboard" && <Dashboard />}
     </main>
   );
 }

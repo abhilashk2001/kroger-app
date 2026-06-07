@@ -5,6 +5,7 @@ import express from "express";
 import { healthRouter } from "./modules/health/health.controller";
 import { householdsRouter } from "./modules/households/households.controller";
 import { ingestRouter } from "./modules/ingest/ingest.controller";
+import { dashboardRouter } from "./modules/dashboard/dashboard.controller";
 import { authRouter } from "./modules/auth/auth.controller";
 import { requireAuth } from "./modules/auth/auth.middleware";
 
@@ -22,6 +23,8 @@ export function createApp() {
   app.use("/api/households", requireAuth, householdsRouter);
   // Data loading (uploading the latest datasets) is likewise protected.
   app.use("/api/ingest", requireAuth, ingestRouter);
+  // The analytics dashboard is protected too.
+  app.use("/api/dashboard", requireAuth, dashboardRouter);
 
   return app;
 }
