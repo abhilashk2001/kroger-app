@@ -4,6 +4,7 @@
 import express from "express";
 import { healthRouter } from "./modules/health/health.controller";
 import { householdsRouter } from "./modules/households/households.controller";
+import { ingestRouter } from "./modules/ingest/ingest.controller";
 import { authRouter } from "./modules/auth/auth.controller";
 import { requireAuth } from "./modules/auth/auth.middleware";
 
@@ -19,6 +20,8 @@ export function createApp() {
   app.use("/api/auth", authRouter);
   // The household data pull is protected: a valid bearer token is required.
   app.use("/api/households", requireAuth, householdsRouter);
+  // Data loading (uploading the latest datasets) is likewise protected.
+  app.use("/api/ingest", requireAuth, ingestRouter);
 
   return app;
 }

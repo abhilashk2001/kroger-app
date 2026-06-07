@@ -4,6 +4,11 @@ node_modules/
 # Build output
 dist/
 build/
+*.tsbuildinfo
+
+# npm lockfile — the Dockerfile uses `npm install`, so no lockfile is committed
+# (consistent across all phases).
+package-lock.json
 
 # Environment (never commit real secrets; .env.example is the template)
 .env

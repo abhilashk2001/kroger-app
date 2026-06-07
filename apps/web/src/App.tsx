@@ -1,10 +1,14 @@
-import { type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { AuthProvider, useAuth } from "./AuthContext";
 import AuthPage from "./AuthPage";
 import HouseholdSearch from "./HouseholdSearch";
+import LoadData from "./LoadData";
+
+type View = "search" | "load";
 
 function Shell() {
   const { user, loading, logout } = useAuth();
+  const [view, setView] = useState<View>("search");
 
   if (loading) {
     return <p style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>Loading…</p>;
@@ -17,7 +21,7 @@ function Shell() {
   return (
     <main style={styles.main}>
       <header style={styles.header}>
-        <h1 style={{ margin: 0, fontSize: "1.4rem" }}>Kroger — Household Data Pull</h1>
+        <h1 style={{ margin: 0, fontSize: "1.4rem" }}>Kroger — Retail Analytics</h1>
         <div style={styles.userBox}>
           <span style={{ color: "#555" }}>
             Signed in as <strong>{user.username}</strong>
@@ -27,7 +31,23 @@ function Shell() {
           </button>
         </div>
       </header>
-      <HouseholdSearch />
+
+      <nav style={styles.nav}>
+        <button
+          onClick={() => setView("search")}
+          style={view === "search" ? styles.tabActive : styles.tab}
+        >
+          Search
+        </button>
+        <button
+          onClick={() => setView("load")}
+          style={view === "load" ? styles.tabActive : styles.tab}
+        >
+          Load Data
+        </button>
+      </nav>
+
+      {view === "search" ? <HouseholdSearch /> : <LoadData />}
     </main>
   );
 }
@@ -63,6 +83,22 @@ const styles: Record<string, CSSProperties> = {
     padding: "0.4rem 0.8rem",
     border: "1px solid #ccc",
     background: "white",
+    borderRadius: 6,
+    cursor: "pointer",
+  },
+  nav: { display: "flex", gap: "0.5rem", marginBottom: "1.5rem" },
+  tab: {
+    padding: "0.4rem 1rem",
+    border: "1px solid #ccc",
+    background: "white",
+    borderRadius: 6,
+    cursor: "pointer",
+  },
+  tabActive: {
+    padding: "0.4rem 1rem",
+    border: "1px solid #4a7",
+    background: "#4a7",
+    color: "white",
     borderRadius: 6,
     cursor: "pointer",
   },
