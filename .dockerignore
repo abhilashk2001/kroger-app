@@ -1,0 +1,17 @@
+# Keep the build context small and reproducible. node_modules are reinstalled in
+# the image; everything below is irrelevant to the production build.
+**/node_modules
+**/dist
+**/.pytest_cache
+**/__pycache__
+.git
+.scratch
+docs
+ml
+data
+project-breif
+claude
+*.md
+**/*.tsbuildinfo
+.env
+.env.*

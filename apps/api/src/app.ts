@@ -1,7 +1,9 @@
 // Builds the Express application and wires up routes. Kept separate from server.ts
 // so tests can import a fresh app instance without starting a real HTTP listener.
 
+import path from "node:path";
 import express from "express";
+import { config } from "./core/config";
 import { healthRouter } from "./modules/health/health.controller";
 import { householdsRouter } from "./modules/households/households.controller";
 import { ingestRouter } from "./modules/ingest/ingest.controller";
@@ -31,6 +33,16 @@ export function createApp() {
   app.use("/api/basket", requireAuth, basketRouter);
   // Churn prediction (precomputed per-household risk) is protected.
   app.use("/api/churn", requireAuth, churnRouter);
+
+  // In production the API also serves the built React app same-origin. The API
+  // routes above keep priority; any other path serves index.html so the SPA loads
+  // (and a refresh on a client path still works). Inert in dev (staticDir empty).
+  if (config.nodeEnv === "production" && config.staticDir) {
+    app.use(express.static(config.staticDir));
+    app.get(/^(?!\/api\/).*/, (_req, res) => {
+      res.sendFile(path.join(config.staticDir, "index.html"));
+    });
+  }
 
   return app;
 }

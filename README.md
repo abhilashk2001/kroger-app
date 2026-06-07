@@ -70,6 +70,20 @@ services hold business logic, and repositories own all database access.
 docker compose exec api npm test
 ```
 
+## Cloud deployment (one-time proof)
+
+The app deploys to Azure as a one-time **deploy → screenshot → tear down** proof, not
+an always-on service. A single production image (Express serving the React build) runs
+on Azure App Service for Containers against Azure Database for PostgreSQL, all in one
+resource group. Scripts: `infra/azure/deploy.sh` and `infra/azure/teardown.sh`. Full
+walkthrough: [docs/deploy/azure.md](docs/deploy/azure.md).
+
+Smoke-test the production image locally first:
+
+```bash
+docker compose -f docker-compose.prod.yml up --build   # http://localhost:8080
+```
+
 ## Development notes
 
 - Source folders are bind-mounted into the containers, so edits hot-reload
