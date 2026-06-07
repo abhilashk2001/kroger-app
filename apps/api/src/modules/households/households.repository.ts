@@ -8,6 +8,11 @@ export function findHousehold(hshdNum: number) {
   return prisma.household.findUnique({ where: { hshdNum } });
 }
 
+/** The household's precomputed churn score, if one exists (null otherwise). */
+export function findHouseholdChurn(hshdNum: number) {
+  return prisma.householdChurn.findUnique({ where: { hshdNum } });
+}
+
 /** Counts a household's transaction lines (for pagination metadata). */
 export function countHouseholdTransactions(hshdNum: number) {
   return prisma.transaction.count({ where: { hshdNum } });

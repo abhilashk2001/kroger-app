@@ -4,6 +4,7 @@
 
 import {
   findHousehold,
+  findHouseholdChurn,
   countHouseholdTransactions,
   findHouseholdTransactions,
 } from "./households.repository";
@@ -21,11 +22,17 @@ export interface PullRow {
   year: number;
 }
 
+export interface ChurnRisk {
+  probability: number;
+  band: string;
+}
+
 export interface HouseholdPull {
   hshdNum: number;
   page: number;
   pageSize: number;
   total: number;
+  churn: ChurnRisk | null;
   rows: PullRow[];
 }
 
@@ -38,9 +45,10 @@ export async function getHouseholdPull(
   if (!household) return null;
 
   const skip = (page - 1) * pageSize;
-  const [transactions, total] = await Promise.all([
+  const [transactions, total, churn] = await Promise.all([
     findHouseholdTransactions(hshdNum, skip, pageSize),
     countHouseholdTransactions(hshdNum),
+    findHouseholdChurn(hshdNum),
   ]);
 
   const rows: PullRow[] = transactions.map((t) => ({
@@ -56,5 +64,14 @@ export async function getHouseholdPull(
     year: t.year,
   }));
 
-  return { hshdNum, page, pageSize, total, rows };
+  return {
+    hshdNum,
+    page,
+    pageSize,
+    total,
+    churn: churn
+      ? { probability: churn.churnProbability, band: churn.riskBand }
+      : null,
+    rows,
+  };
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties, type FormEvent } from "react";
 import { useAuth } from "./AuthContext";
+import { RiskBadge } from "./Churn";
 
 const PAGE_SIZE = 50;
 
@@ -21,6 +22,7 @@ interface Pull {
   page: number;
   pageSize: number;
   total: number;
+  churn: { probability: number; band: string } | null;
   rows: PullRow[];
 }
 
@@ -116,14 +118,19 @@ export default function HouseholdSearch() {
 
       {data && !loading && !error && (
         <>
-          <p style={{ color: "#555" }}>
-            Household <strong>{data.hshdNum}</strong> — {data.total} line
-            {data.total === 1 ? "" : "s"}
-            {data.total > 0 && (
-              <>
-                {" "}
-                · page {data.page} of {totalPages}
-              </>
+          <p style={{ color: "#555", display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+            <span>
+              Household <strong>{data.hshdNum}</strong> — {data.total} line
+              {data.total === 1 ? "" : "s"}
+              {data.total > 0 && (
+                <>
+                  {" "}
+                  · page {data.page} of {totalPages}
+                </>
+              )}
+            </span>
+            {data.churn && (
+              <RiskBadge band={data.churn.band} probability={data.churn.probability} />
             )}
           </p>
 

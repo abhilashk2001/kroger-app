@@ -25,6 +25,7 @@ model Household {
   children        String? // text: values are ranges like "3+"
 
   transactions Transaction[]
+  churn        HouseholdChurn?
 
   @@map("households")
 }
@@ -105,4 +106,30 @@ model BasketModelMetric {
   createdAt       DateTime @default(now()) @map("created_at")
 
   @@map("basket_model_metric")
+}
+
+/// Per-household churn risk, precomputed offline by ml/churn.py. Cascade-deleted
+/// when its household is removed (e.g. on a data reload), so scores never go stale.
+model HouseholdChurn {
+  hshdNum          Int      @id @map("hshd_num")
+  churnProbability Float    @map("churn_probability")
+  riskBand         String   @map("risk_band") // Low | Medium | High
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  household Household @relation(fields: [hshdNum], references: [hshdNum], onDelete: Cascade)
+
+  @@map("household_churn")
+}
+
+/// Evaluation summary for the churn model (single row per run). top_drivers is a
+/// comma-joined list of the most important features.
+model ChurnModelMetric {
+  id         Int      @id @default(autoincrement())
+  accuracy   Float
+  rocAuc     Float    @map("roc_auc")
+  churnRate  Float    @map("churn_rate") // base rate of churned households
+  topDrivers String   @map("top_drivers")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("churn_model_metric")
 }

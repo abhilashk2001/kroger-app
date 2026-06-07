@@ -7,6 +7,7 @@ import { householdsRouter } from "./modules/households/households.controller";
 import { ingestRouter } from "./modules/ingest/ingest.controller";
 import { dashboardRouter } from "./modules/dashboard/dashboard.controller";
 import { basketRouter } from "./modules/basket/basket.controller";
+import { churnRouter } from "./modules/churn/churn.controller";
 import { authRouter } from "./modules/auth/auth.controller";
 import { requireAuth } from "./modules/auth/auth.middleware";
 
@@ -28,6 +29,8 @@ export function createApp() {
   app.use("/api/dashboard", requireAuth, dashboardRouter);
   // Basket analysis (precomputed rules + co-purchase model) is protected.
   app.use("/api/basket", requireAuth, basketRouter);
+  // Churn prediction (precomputed per-household risk) is protected.
+  app.use("/api/churn", requireAuth, churnRouter);
 
   return app;
 }

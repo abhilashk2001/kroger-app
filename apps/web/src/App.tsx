@@ -5,8 +5,9 @@ import HouseholdSearch from "./HouseholdSearch";
 import LoadData from "./LoadData";
 import Dashboard from "./Dashboard";
 import BasketAnalysis from "./BasketAnalysis";
+import Churn from "./Churn";
 
-type View = "search" | "load" | "dashboard" | "basket";
+type View = "search" | "load" | "dashboard" | "basket" | "churn";
 
 function Shell() {
   const { user, loading, logout } = useAuth();
@@ -59,12 +60,19 @@ function Shell() {
         >
           Basket Analysis
         </button>
+        <button
+          onClick={() => setView("churn")}
+          style={view === "churn" ? styles.tabActive : styles.tab}
+        >
+          Churn
+        </button>
       </nav>
 
       {view === "search" && <HouseholdSearch />}
       {view === "load" && <LoadData />}
       {view === "dashboard" && <Dashboard />}
       {view === "basket" && <BasketAnalysis />}
+      {view === "churn" && <Churn />}
     </main>
   );
 }
