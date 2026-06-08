@@ -41,14 +41,22 @@ echo "Deploying to resource group '$RG' in '$LOCATION' (suffix=$SUFFIX)..."
 # ── Resource group ───────────────────────────────────────────────────────────
 az group create --name "$RG" --location "$LOCATION" --output none
 
-# ── Container registry + remote image build ──────────────────────────────────
-echo "Creating ACR '$ACR_NAME' and building the image in Azure..."
+# ── Container registry + image build/push ────────────────────────────────────
+# We build locally and push (rather than `az acr build`) because ACR Tasks are not
+# permitted on Azure for Students / free subscriptions. The image is built for
+# linux/amd64 explicitly so it runs on App Service regardless of the host arch.
+echo "Creating ACR '$ACR_NAME'..."
 az acr create --resource-group "$RG" --name "$ACR_NAME" --sku Basic --admin-enabled true --output none
-az acr build --registry "$ACR_NAME" --image "$IMAGE" --file "$REPO_ROOT/Dockerfile" "$REPO_ROOT"
 
 ACR_USER="$(az acr credential show --name "$ACR_NAME" --query username -o tsv)"
 ACR_PASS="$(az acr credential show --name "$ACR_NAME" --query 'passwords[0].value' -o tsv)"
 ACR_SERVER="$(az acr show --name "$ACR_NAME" --query loginServer -o tsv)"
+
+echo "Building the image locally (linux/amd64) and pushing to ACR..."
+command -v docker >/dev/null || { echo "ERROR: docker not found (needed to build/push the image)."; exit 1; }
+echo "$ACR_PASS" | docker login "$ACR_SERVER" --username "$ACR_USER" --password-stdin
+docker build --platform linux/amd64 -t "${ACR_SERVER}/${IMAGE}" -f "$REPO_ROOT/Dockerfile" "$REPO_ROOT"
+docker push "${ACR_SERVER}/${IMAGE}"
 
 # ── PostgreSQL Flexible Server ───────────────────────────────────────────────
 echo "Creating PostgreSQL Flexible Server '$PG_NAME' (Burstable B1ms)..."

@@ -91,6 +91,28 @@ bash infra/azure/teardown.sh
 Deletes the entire resource group (and everything in it). Verify with
 `az group list -o table`.
 
+## Student / free subscription notes
+
+Azure for Students (and free) subscriptions impose restrictions that this setup already
+works around — but they affect which region you can use:
+
+- **Allowed regions only.** A policy (`sys.regionrestriction`) limits deployments to a
+  curated region list. Check yours with:
+  ```bash
+  az policy assignment list --query "[?name=='sys.regionrestriction'].parameters" -o json
+  ```
+  Pass an allowed region as `LOCATION=...`. (`eastus` is commonly *not* allowed; the
+  deploy was done in `centralus`.)
+- **PostgreSQL availability.** A region can be allowed by policy yet still refuse Flexible
+  Server provisioning (e.g. `eastus2`). Confirm B1ms is offered before deploying:
+  ```bash
+  az postgres flexible-server list-skus --location <region> \
+    --query "[0].supportedServerEditions[?name=='Burstable'].supportedServerSkus[].name" -o tsv
+  ```
+- **ACR Tasks are blocked**, so the script builds the image locally and pushes it (needs
+  Docker running) rather than using `az acr build`. The image is cross-built for
+  `linux/amd64` so it runs on App Service from any host architecture.
+
 ## Cost note
 
 App Service B1 + PostgreSQL B1ms + ACR Basic together cost on the order of a few US

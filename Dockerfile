@@ -4,8 +4,11 @@
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Stage 1 — build the React app into static assets (/web/dist).
+# Runs on the BUILDER's native arch ($BUILDPLATFORM), not the target platform:
+# the output is arch-independent static files, and building natively avoids the
+# npm/rollup optional-native-dependency bug that bites under cross-arch emulation.
 # ─────────────────────────────────────────────────────────────────────────────
-FROM node:22-bookworm-slim AS web-build
+FROM --platform=$BUILDPLATFORM node:22-bookworm-slim AS web-build
 WORKDIR /web
 COPY apps/web/package.json apps/web/package-lock.json* ./
 RUN npm install
