@@ -52,7 +52,7 @@ export default function HouseholdSearch() {
       .then(async (res) => {
         if (res.status === 401) {
           logout();
-          throw new Error("Session expired — please log in again.");
+          throw new Error("Session expired. Please log in again.");
         }
         if (res.status === 404) throw new Error(`Household ${household} not found.`);
         if (!res.ok) throw new Error(`Request failed (${res.status}).`);
@@ -95,8 +95,7 @@ export default function HouseholdSearch() {
   return (
     <section>
       <p style={{ color: "#555" }}>
-        Enter a household number to see all of its purchases, sorted by basket, date,
-        product, department, and commodity.
+        Look up a household by number to see its full purchase history.
       </p>
 
       <form onSubmit={handleSubmit} style={styles.form}>
@@ -120,7 +119,7 @@ export default function HouseholdSearch() {
         <>
           <p style={{ color: "#555", display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
             <span>
-              Household <strong>{data.hshdNum}</strong> — {data.total} line
+              Household <strong>{data.hshdNum}</strong> · {data.total} line
               {data.total === 1 ? "" : "s"}
               {data.total > 0 && (
                 <>

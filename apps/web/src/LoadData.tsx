@@ -58,7 +58,7 @@ export default function LoadData() {
       });
       if (res.status === 401) {
         logout();
-        throw new Error("Session expired — please log in again.");
+        throw new Error("Session expired. Please log in again.");
       }
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? `Request failed (${res.status}).`);
@@ -74,8 +74,8 @@ export default function LoadData() {
   return (
     <section>
       <p style={{ color: "#555" }}>
-        Upload the latest Households, Products, and Transactions CSV files. Loading
-        replaces the current dataset; afterwards, search reflects the new data.
+        Upload the households, products, and transactions CSV files. This replaces
+        whatever data is currently loaded.
       </p>
 
       <form onSubmit={handleSubmit} style={styles.form}>

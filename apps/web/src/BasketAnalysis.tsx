@@ -37,7 +37,7 @@ export default function BasketAnalysis() {
       .then(async ([rRes, mRes]) => {
         if (rRes.status === 401 || mRes.status === 401) {
           logout();
-          throw new Error("Session expired — please log in again.");
+          throw new Error("Session expired. Please log in again.");
         }
         if (!rRes.ok || !mRes.ok) throw new Error("Request failed.");
         const r = await rRes.json();
@@ -65,8 +65,7 @@ export default function BasketAnalysis() {
   if (rules.length === 0 && models.length === 0) {
     return (
       <div style={styles.empty}>
-        No basket analysis has been computed yet. After loading data, run the offline
-        job:
+        Nothing here yet. Load some data, then run the basket analysis job:
         <pre style={styles.code}>docker compose run --rm ml python basket_analysis.py</pre>
         then refresh this tab.
       </div>
@@ -76,14 +75,14 @@ export default function BasketAnalysis() {
   return (
     <section>
       <p style={{ color: "#555" }}>
-        Commodities frequently bought together (association rules, ranked by lift), and
-        a Gradient Boosting model predicting co-purchase.
+        Which commodities tend to sell together, ranked by lift, plus a Gradient
+        Boosting model that predicts co-purchases.
       </p>
 
       {models.map((m) => (
         <div key={m.targetCommodity} style={styles.modelCard}>
           <h3 style={styles.cardTitle}>
-            Co-purchase model — predicting <em>{m.targetCommodity}</em>
+            Co-purchase model for <em>{m.targetCommodity}</em>
           </h3>
           <div style={styles.stats}>
             <div style={styles.stat}>

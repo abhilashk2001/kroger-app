@@ -24,7 +24,7 @@ function Shell() {
   return (
     <main style={styles.main}>
       <header style={styles.header}>
-        <h1 style={{ margin: 0, fontSize: "1.4rem" }}>Kroger — Retail Analytics</h1>
+        <h1 style={{ margin: 0, fontSize: "1.4rem" }}>Kroger Retail Analytics</h1>
         <div style={styles.userBox}>
           <span style={{ color: "#555" }}>
             Signed in as <strong>{user.username}</strong>

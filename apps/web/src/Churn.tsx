@@ -67,7 +67,7 @@ export default function Churn() {
       .then(async ([aRes, sRes]) => {
         if (aRes.status === 401 || sRes.status === 401) {
           logout();
-          throw new Error("Session expired — please log in again.");
+          throw new Error("Session expired. Please log in again.");
         }
         if (!aRes.ok || !sRes.ok) throw new Error("Request failed.");
         const a = await aRes.json();
@@ -96,7 +96,7 @@ export default function Churn() {
   if (!hasData) {
     return (
       <div style={styles.empty}>
-        No churn scores yet. After loading data, run the offline job:
+        No churn scores yet. Load some data, then run the churn job:
         <pre style={styles.code}>docker compose run --rm ml python churn.py</pre>
         then refresh this tab.
       </div>
@@ -106,8 +106,8 @@ export default function Churn() {
   return (
     <section>
       <p style={{ color: "#555" }}>
-        Households at risk of disengaging, scored offline by a Gradient Boosting model.
-        Risk is driven mainly by recency and tenure.
+        Which households look most likely to stop shopping, scored by a Gradient
+        Boosting model. Recency and tenure carry most of the weight.
       </p>
 
       <div style={styles.topRow}>

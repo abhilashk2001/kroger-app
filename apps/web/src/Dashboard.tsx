@@ -87,7 +87,7 @@ export default function Dashboard() {
       .then(async (res) => {
         if (res.status === 401) {
           logout();
-          throw new Error("Session expired — please log in again.");
+          throw new Error("Session expired. Please log in again.");
         }
         if (!res.ok) throw new Error(`Request failed (${res.status}).`);
         return res.json();
@@ -115,8 +115,7 @@ export default function Dashboard() {
   if (!hasData) {
     return (
       <div style={styles.empty}>
-        No data loaded yet. Use the <strong>Load Data</strong> tab to upload the
-        Households, Products, and Transactions CSVs, then come back here.
+        No data loaded yet. Upload the CSVs on the <strong>Load Data</strong> tab first.
       </div>
     );
   }
@@ -134,8 +133,7 @@ export default function Dashboard() {
   return (
     <section>
       <p style={{ color: "#555" }}>
-        Aggregate view of the currently loaded data — engagement over time,
-        category and brand preference, and how demographics relate to spend.
+        Spending across the whole dataset, sliced a few different ways.
       </p>
 
       <div style={styles.grid}>
