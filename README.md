@@ -1,5 +1,9 @@
 # Kroger Retail Analytics
 
+**🔗 Live demo: [kroger-app.onrender.com](https://kroger-app.onrender.com)** — log in as
+`demo` / `password123`. *(Free Render instance; if it's been idle, the first load may take
+~50s to wake up.)*
+
 An end-to-end retail analytics application on the 84.51°/Kroger **"Complete Journey"**
 dataset (400 households, ~67k products, ~2 years of transactions). A logged-in user can
 load the datasets, pull any household's purchase history, explore an analytics dashboard,
@@ -171,10 +175,20 @@ Stated honestly — naming trade-offs beats pretending there are none.
 - **The API runs via `tsx`** (no ahead-of-time compile to JavaScript). Fine for this
   project; an AOT build would be a natural production hardening step.
 
-## Cloud deployment (one-time proof)
+## Deployment
 
-The app was deployed to Azure as a one-time **deploy → screenshot → tear down** proof, not
-an always-on service — the durable deliverable is this repo and these screenshots. A single
+The app ships as a single production image (Express serving the React build, migrations on
+boot) and has two documented deployments:
+
+- **Live demo — Render + Neon (always-on, free):** the public link at the top runs the
+  same image on a free Render web service against a free Neon PostgreSQL database. Guide:
+  **[docs/deploy/render.md](docs/deploy/render.md)**.
+- **Azure (one-time proof):** described below.
+
+### Azure (one-time proof)
+
+The app was also deployed to Azure as a one-time **deploy → screenshot → tear down** proof,
+not an always-on service — the durable deliverable is this repo and these screenshots. A single
 production image runs on **Azure App Service for Containers** against **Azure Database for
 PostgreSQL**, all in one resource group; `infra/azure/deploy.sh` provisions it and
 `infra/azure/teardown.sh` removes everything. Full walkthrough:
