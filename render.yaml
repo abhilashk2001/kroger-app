@@ -1,0 +1,28 @@
+# Render Blueprint — deploys the app as a single Docker web service on the free plan.
+# In the Render dashboard: New → Blueprint → connect this repo. Render builds the
+# root Dockerfile (Express serving the React build, migrations on boot) and injects
+# PORT automatically. Set DATABASE_URL (a Neon connection string) when prompted.
+#
+# Full walkthrough: docs/deploy/render.md
+services:
+  - type: web
+    name: kroger-app
+    runtime: docker
+    plan: free
+    region: ohio
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      # Render generates and stores a strong secret for us.
+      - key: JWT_SECRET
+        generateValue: true
+      # Set in the dashboard: the Neon Postgres connection string
+      # (postgresql://...@...neon.tech/<db>?sslmode=require). Not committed.
+      - key: DATABASE_URL
+        sync: false
