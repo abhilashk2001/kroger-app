@@ -24,6 +24,10 @@ def get_engine() -> Engine:
     host = os.environ.get("POSTGRES_HOST", "db")
     port = os.environ.get("POSTGRES_PORT", "5432")
     url = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}"
+    # Managed Postgres (e.g. Azure) requires SSL; set POSTGRES_SSLMODE=require.
+    sslmode = os.environ.get("POSTGRES_SSLMODE")
+    if sslmode:
+        url = f"{url}?sslmode={sslmode}"
     return create_engine(url)
 
 
