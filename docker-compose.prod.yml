@@ -1,4 +1,4 @@
-# Local smoke test of the PRODUCTION image — the single container (Express serving
+# Local smoke test of the PRODUCTION image - the single container (Express serving
 # the React build) against a throwaway Postgres. Mirrors how Azure will run it.
 #
 #   docker compose -f docker-compose.prod.yml up --build

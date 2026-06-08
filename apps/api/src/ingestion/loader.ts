@@ -1,5 +1,5 @@
 // Streaming CSV loader for the Kroger data. Loads households and products fully,
-// then streams transactions in batches — skipping (and counting) any transaction
+// then streams transactions in batches - skipping (and counting) any transaction
 // whose household or product isn't present, so foreign keys always resolve.
 
 import { createReadStream } from "node:fs";

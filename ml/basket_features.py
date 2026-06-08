@@ -1,4 +1,4 @@
-"""Pure feature-construction helpers for basket analysis. No database, no model —
+"""Pure feature-construction helpers for basket analysis. No database, no model -
 so they can be unit-tested directly (see test_basket_features.py)."""
 
 from __future__ import annotations

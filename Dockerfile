@@ -3,7 +3,7 @@
 # Build from the repo root:  docker build -t kroger-app .
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Stage 1 — build the React app into static assets (/web/dist).
+# Stage 1 - build the React app into static assets (/web/dist).
 # Runs on the BUILDER's native arch ($BUILDPLATFORM), not the target platform:
 # the output is arch-independent static files, and building natively avoids the
 # npm/rollup optional-native-dependency bug that bites under cross-arch emulation.
@@ -16,7 +16,7 @@ COPY apps/web/ ./
 RUN npm run build
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Stage 2 — API runtime that also serves the web build.
+# Stage 2 - API runtime that also serves the web build.
 # ─────────────────────────────────────────────────────────────────────────────
 FROM node:22-bookworm-slim AS runtime
 
@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends openssl \
 
 WORKDIR /app
 
-# Install deps BEFORE setting NODE_ENV=production — the API runs via tsx, a
+# Install deps BEFORE setting NODE_ENV=production - the API runs via tsx, a
 # devDependency, which `npm install` would skip under production.
 COPY apps/api/package.json apps/api/package-lock.json* ./
 RUN npm install

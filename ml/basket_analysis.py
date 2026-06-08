@@ -20,7 +20,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 from db import get_engine, load_basket_lines, replace_table
 from basket_features import baskets_to_itemsets, itemsets_to_onehot
 
-# Tunables — printed counts after a run make these easy to adjust. The trimmed sample
+# Tunables - printed counts after a run make these easy to adjust. The trimmed sample
 # averages ~1.7 items/basket, so co-occurrence is sparse and a low support is needed
 # to surface any pairs at all.
 MIN_SUPPORT = 0.001     # itemset must appear in >= 0.1% of baskets (~30 of 30k)

@@ -1,4 +1,4 @@
-# Kroger Retail Analytics — Agent Guide
+# Kroger Retail Analytics - Agent Guide
 
 A backend-focused retail analytics project built on the 84.51°/Kroger "Complete
 Journey" dataset. Stack: **Express + TypeScript** API, **React + Vite** web client,

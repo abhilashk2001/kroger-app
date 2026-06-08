@@ -1,4 +1,4 @@
-# ADR-0004 — Offline ML precomputed into the database
+# ADR-0004 - Offline ML precomputed into the database
 
 Status: Accepted
 
@@ -17,7 +17,7 @@ only ever serves those precomputed rows.
 
 ## Rationale
 
-- Keeps the **runtime a pure TypeScript service** — no live Python process, no
+- Keeps the **runtime a pure TypeScript service** - no live Python process, no
   request-time language bridge, fast responses.
 - One source of truth for ingestion and results (the database); the CLI loader and the ML
   jobs share the same data path.
@@ -29,4 +29,4 @@ only ever serves those precomputed rows.
 - Results are as fresh as the last job run (acceptable; re-running is one command).
 - Prisma owns the schema; Python only inserts (array-ish fields are stored as
   comma-joined text, which `to_sql` writes reliably and the API splits back).
-- Managed-Postgres connections need SSL — supported via `POSTGRES_SSLMODE`.
+- Managed-Postgres connections need SSL - supported via `POSTGRES_SSLMODE`.

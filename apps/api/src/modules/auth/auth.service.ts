@@ -1,4 +1,4 @@
-// SERVICE layer: the auth business logic — hashing, credential verification, and
+// SERVICE layer: the auth business logic - hashing, credential verification, and
 // issuing/verifying JWTs. Throws AuthError (with an HTTP status) for the controller
 // and middleware to translate into responses.
 

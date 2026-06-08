@@ -1,5 +1,5 @@
 // REPOSITORY layer: reads the precomputed basket-analysis tables. The API never
-// runs the model — it only serves rows written offline by ml/basket_analysis.py.
+// runs the model - it only serves rows written offline by ml/basket_analysis.py.
 
 import { prisma } from "../../core/prisma";
 

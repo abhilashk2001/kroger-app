@@ -1,6 +1,6 @@
 // Integration test for the loader, run against a SEPARATE test database so it
 // never touches dev data. Loads a tiny fixture, then asserts on what landed in
-// the database — including that missing demographics become NULL, dates parse,
+// the database - including that missing demographics become NULL, dates parse,
 // and an orphan transaction (referencing a missing product) is skipped.
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
@@ -11,7 +11,7 @@ import { loadAll } from "../src/ingestion/loader";
 
 if (!process.env.TEST_DATABASE_URL) {
   throw new Error(
-    "TEST_DATABASE_URL is not set — refusing to run loader tests against the dev database.",
+    "TEST_DATABASE_URL is not set - refusing to run loader tests against the dev database.",
   );
 }
 

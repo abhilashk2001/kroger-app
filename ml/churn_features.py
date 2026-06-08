@@ -1,4 +1,4 @@
-"""Pure label + feature construction for churn prediction. No database, no model —
+"""Pure label + feature construction for churn prediction. No database, no model -
 so the churn definition can be unit-tested directly (see test_churn_features.py).
 
 Framing: pick a `cutoff` near the end of the data. Features are computed only from

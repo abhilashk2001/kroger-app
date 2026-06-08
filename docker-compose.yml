@@ -1,10 +1,10 @@
-# One command — `docker compose up` — boots the whole stack: Postgres, the API,
+# One command - `docker compose up` - boots the whole stack: Postgres, the API,
 # and the React web app, all on one private network where they reach each other
 # by service name (db, api, web).
 
 services:
   # ─────────────────────────────────────────────────────────────────────────
-  # Postgres database. Uses the official ready-made image — no Dockerfile needed.
+  # Postgres database. Uses the official ready-made image - no Dockerfile needed.
   # ─────────────────────────────────────────────────────────────────────────
   db:
     image: postgres:16
@@ -16,7 +16,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      # "host:container" — lets you connect from your Mac (e.g. a DB GUI) on 5432.
+      # "host:container" - lets you connect from your Mac (e.g. a DB GUI) on 5432.
       - "5432:5432"
     volumes:
       # Named volume = the data survives `docker compose down` and restarts.
@@ -82,7 +82,7 @@ services:
 
   # ─────────────────────────────────────────────────────────────────────────
   # Offline ML jobs (Python). Behind the "ml" profile, so `docker compose up`
-  # does NOT start it — the runtime stays a pure TypeScript API. Run on demand:
+  # does NOT start it - the runtime stays a pure TypeScript API. Run on demand:
   #   docker compose run --rm ml python basket_analysis.py
   #   docker compose run --rm ml python churn.py
   # ─────────────────────────────────────────────────────────────────────────

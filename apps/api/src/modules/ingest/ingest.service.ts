@@ -1,5 +1,5 @@
 // SERVICE layer: runs an uploaded dataset through the Phase 2 loader, then always
-// cleans up the temporary files multer wrote — whether the load succeeds or fails.
+// cleans up the temporary files multer wrote - whether the load succeeds or fails.
 // Knows nothing about HTTP. Reuses loadAll unchanged, so the web upload and the CLI
 // (`npm run load`) share one ingestion path and can't drift.
 

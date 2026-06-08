@@ -40,7 +40,7 @@ def main() -> None:
     print(f"{len(features):,} households scored; churn base rate = {y.mean():.1%}")
 
     if y.nunique() < 2:
-        print("Only one class present — cannot train. Aborting.")
+        print("Only one class present - cannot train. Aborting.")
         return
 
     X_train, X_test, y_train, y_test = train_test_split(

@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends openssl \
 WORKDIR /app
 
 # Install dependencies first. This layer is cached and only re-runs when
-# package.json changes — so code edits don't trigger a full reinstall.
+# package.json changes - so code edits don't trigger a full reinstall.
 COPY package.json package-lock.json* ./
 RUN npm install
 

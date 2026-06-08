@@ -1,11 +1,11 @@
-# ADR-0006 — Churn label: cutoff-window framing
+# ADR-0006 - Churn label: cutoff-window framing
 
 Status: Accepted
 
 ## Context
 
 The transaction log has no explicit "canceled" event, so a churn target has to be
-constructed from purchase behavior — and constructed carefully to avoid label leakage.
+constructed from purchase behavior - and constructed carefully to avoid label leakage.
 
 ## Decision
 
@@ -25,7 +25,7 @@ is **Gradient Boosting**, writing per-household probability + risk band to
 
 ## Consequences & honest caveat
 
-- The held-out ROC-AUC is **very high (~0.99)** — but this is partly **mechanical**: the
+- The held-out ROC-AUC is **very high (~0.99)** - but this is partly **mechanical**: the
   label ("quiet for 90 days") correlates strongly with recency-at-cutoff, so the task is
   inherently easy. This should be described as a **recency-driven risk model**, not a claim
   of deep predictive power.

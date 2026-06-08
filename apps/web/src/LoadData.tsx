@@ -9,7 +9,7 @@ interface LoadReport {
   skippedTransactions: number;
 }
 
-// The three file parts the API expects — names must match the multer fields.
+// The three file parts the API expects - names must match the multer fields.
 const FIELDS = [
   { name: "households", label: "Households CSV" },
   { name: "products", label: "Products CSV" },
@@ -46,7 +46,7 @@ export default function LoadData() {
     setReport(null);
 
     // FormData produces the multipart/form-data body. We do NOT set a
-    // Content-Type header — the browser adds it (with the boundary) for us.
+    // Content-Type header - the browser adds it (with the boundary) for us.
     const body = new FormData();
     for (const f of FIELDS) body.append(f.name, files[f.name] as File);
 

@@ -1,4 +1,4 @@
-# ADR-0007 — Single production image + one-time Azure deploy
+# ADR-0007 - Single production image + one-time Azure deploy
 
 Status: Accepted
 
@@ -6,7 +6,7 @@ Status: Accepted
 
 Local dev runs three containers (db, API dev server, Vite dev server). Production needs an
 internet-accessible deployment, and the project's delivery model is a one-time
-**deploy → screenshot → tear down** proof on Azure free/student tiers — not always-on.
+**deploy → screenshot → tear down** proof on Azure free/student tiers - not always-on.
 
 ## Decision
 
@@ -30,7 +30,7 @@ internet-accessible deployment, and the project's delivery model is a one-time
 - The image is built locally and pushed (ACR Tasks are blocked on student subscriptions),
   cross-built for `linux/amd64`; the web stage builds on the native `$BUILDPLATFORM` to
   dodge the npm/rollup cross-arch bug.
-- Student subscriptions restrict regions and Postgres availability — documented in
+- Student subscriptions restrict regions and Postgres availability - documented in
   `docs/deploy/azure.md`; the live proof ran in `centralus`.
-- The API runs via `tsx` in the image (no ahead-of-time JS compile) — a conscious
+- The API runs via `tsx` in the image (no ahead-of-time JS compile) - a conscious
   simplification, noted as a future hardening step.

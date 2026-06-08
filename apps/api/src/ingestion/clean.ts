@@ -1,5 +1,5 @@
 // Pure functions that clean the quirks in the 84.51/Kroger CSVs. Each one takes a
-// raw string field and returns a typed, cleaned value. No I/O, no database — which
+// raw string field and returns a typed, cleaned value. No I/O, no database - which
 // makes them trivial to unit-test, and that's where the real risk lives.
 
 /**
@@ -51,7 +51,7 @@ const MONTHS: Record<string, number> = {
 
 /**
  * Parses an Oracle-style date like "17-AUG-18" into a UTC Date.
- * The two-digit year is interpreted with a 1970 pivot (00–69 -> 2000s, 70–99 -> 1900s).
+ * The two-digit year is interpreted with a 1970 pivot (00-69 -> 2000s, 70-99 -> 1900s).
  */
 export function parseOracleDate(value: string): Date {
   const v = value.trim().toUpperCase();

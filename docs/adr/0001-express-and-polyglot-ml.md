@@ -1,4 +1,4 @@
-# ADR-0001 — Express + TypeScript API, with offline Python ML (polyglot)
+# ADR-0001 - Express + TypeScript API, with offline Python ML (polyglot)
 
 Status: Accepted
 
@@ -16,7 +16,7 @@ build a Python-only stack or a polyglot one.
 
 ## Rationale
 
-- **Express over NestJS:** Express is transparent — routing, middleware, and the layering
+- **Express over NestJS:** Express is transparent - routing, middleware, and the layering
   are written explicitly rather than supplied by a framework's DI/decorators. For a
   learning/portfolio project that wants to *show* the architecture, that transparency is
   worth more than NestJS's conventions.

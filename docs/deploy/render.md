@@ -5,14 +5,14 @@ shareable link (resume / recruiters). The app runs as a single Docker web servic
 **Render** (free) against a free, persistent **Neon** PostgreSQL database.
 
 - **App host:** Render free web service (Docker). No credit card. It **sleeps after ~15
-  min idle**, so the first visit after a quiet spell cold-starts in ~50s — see
+  min idle**, so the first visit after a quiet spell cold-starts in ~50s - see
   [Keeping it warm](#keeping-it-warm).
 - **Database:** Neon free Postgres. No credit card; data persists; compute auto-suspends
   when idle and resumes in ~1s.
 
 ## 1. Create the database (Neon)
 
-1. Sign up at **neon.tech** (GitHub login is easiest) and create a project — pick a
+1. Sign up at **neon.tech** (GitHub login is easiest) and create a project - pick a
    region near your Render region (US East pairs well with Render's `ohio`).
 2. Copy the **connection string**. Use the **direct** (un-pooled) one for `DATABASE_URL`
    so Prisma migrations work; it looks like:
@@ -53,7 +53,7 @@ The database is empty after the first deploy. Two parts:
 1. **Core data (Search + Dashboard):** open the live URL, register a user, and upload the
    three CSVs from `data/sample/` on the **Load Data** tab.
 2. **ML tabs (Basket + Churn):** run the offline jobs against Neon from your machine
-   (Neon allows connections by default — no firewall step needed):
+   (Neon allows connections by default - no firewall step needed):
 
    ```bash
    docker compose run --rm \
@@ -71,7 +71,7 @@ Because Neon persists, you seed once and the link stays populated.
 ## Keeping it warm
 
 Render free services sleep after ~15 min idle. To avoid a cold start when a recruiter
-clicks, ping the health endpoint every ~10–14 minutes with a free uptime monitor
+clicks, ping the health endpoint every ~10-14 minutes with a free uptime monitor
 (e.g. **cron-job.org** or **UptimeRobot**):
 
 ```

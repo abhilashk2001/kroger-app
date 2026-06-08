@@ -12,7 +12,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// One row per household. Demographics are optional — many households have none.
+/// One row per household. Demographics are optional - many households have none.
 model Household {
   hshdNum         Int     @id @map("hshd_num")
   loyaltyFlag     Boolean @map("loyalty_flag")
@@ -81,7 +81,7 @@ model User {
 
 /// Market-basket association rules (commodity level), precomputed offline by
 /// ml/basket_analysis.py. antecedents/consequents are comma-joined commodity lists
-/// (stored as text — simpler to write from pandas than a Postgres array).
+/// (stored as text - simpler to write from pandas than a Postgres array).
 model BasketRule {
   id          Int      @id @default(autoincrement())
   antecedents String

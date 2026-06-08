@@ -1,7 +1,7 @@
 # Azure deployment (one-time proof)
 
 This project's cloud story is a **one-time deploy → screenshot → tear down**, not an
-always-on service. The durable deliverable is this repo — the production image, the
+always-on service. The durable deliverable is this repo - the production image, the
 scripts below, and the screenshots you capture. Everything lives in a single resource
 group so teardown is one command and nothing is left to accrue cost.
 
@@ -21,9 +21,9 @@ migrations run automatically on container boot.
 
 ## Prerequisites
 
-- **Azure CLI** — already at `az version` ≥ 2.x on this machine.
+- **Azure CLI** - already at `az version` ≥ 2.x on this machine.
 - **An Azure subscription** (e.g. a student/course account).
-- **Log in** (interactive — run it yourself):
+- **Log in** (interactive - run it yourself):
 
   ```bash
   az login
@@ -45,10 +45,10 @@ docker compose -f docker-compose.prod.yml down -v
 bash infra/azure/deploy.sh
 ```
 
-This provisions the registry, builds the image in Azure (`az acr build` — no local
+This provisions the registry, builds the image in Azure (`az acr build` - no local
 push), creates the Postgres server and the web app, wires the connection string and a
 generated JWT secret, and prints the **public URL** plus the generated secrets (note
-them down). Provisioning takes roughly 5–10 minutes, mostly the database.
+them down). Provisioning takes roughly 5-10 minutes, mostly the database.
 
 Override defaults via environment variables if needed, e.g.:
 
@@ -94,7 +94,7 @@ Deletes the entire resource group (and everything in it). Verify with
 ## Student / free subscription notes
 
 Azure for Students (and free) subscriptions impose restrictions that this setup already
-works around — but they affect which region you can use:
+works around - but they affect which region you can use:
 
 - **Allowed regions only.** A policy (`sys.regionrestriction`) limits deployments to a
   curated region list. Check yours with:
@@ -117,4 +117,4 @@ works around — but they affect which region you can use:
 
 App Service B1 + PostgreSQL B1ms + ACR Basic together cost on the order of a few US
 cents per hour. Kept to the deploy-and-screenshot window and torn down promptly, the
-total is negligible — but **always run teardown** so nothing lingers.
+total is negligible - but **always run teardown** so nothing lingers.

@@ -13,7 +13,7 @@ command -v az >/dev/null || { echo "ERROR: az CLI not found."; exit 1; }
 az account show >/dev/null 2>&1 || { echo "ERROR: not logged in. Run 'az login'."; exit 1; }
 
 if ! az group show --name "$RG" >/dev/null 2>&1; then
-  echo "Resource group '$RG' not found — nothing to tear down."
+  echo "Resource group '$RG' not found - nothing to tear down."
   exit 0
 fi
 

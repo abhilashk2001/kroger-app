@@ -6,7 +6,7 @@ dist/
 build/
 *.tsbuildinfo
 
-# npm lockfile — the Dockerfile uses `npm install`, so no lockfile is committed
+# npm lockfile - the Dockerfile uses `npm install`, so no lockfile is committed
 # (consistent across all phases).
 package-lock.json
 
@@ -26,7 +26,7 @@ yarn-error.log*
 .vscode/
 .idea/
 
-# Source datasets — large / not for version control.
+# Source datasets - large / not for version control.
 # The 400_transactions.csv alone is ~128 MB. Phase 2 commits a trimmed sample
 # under data/sample/ instead.
 project-breif/data-sources/*.csv
@@ -38,5 +38,5 @@ project-breif/data-sources/*.csv
 __pycache__/
 *.pyc
 .pytest_cache/
-# Generated analysis artifacts (charts, reports) — not version-controlled.
+# Generated analysis artifacts (charts, reports) - not version-controlled.
 ml/reports/

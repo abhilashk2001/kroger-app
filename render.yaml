@@ -1,4 +1,4 @@
-# Render Blueprint — deploys the app as a single Docker web service on the free plan.
+# Render Blueprint - deploys the app as a single Docker web service on the free plan.
 # In the Render dashboard: New → Blueprint → connect this repo. Render builds the
 # root Dockerfile (Express serving the React build, migrations on boot) and injects
 # PORT automatically. Set DATABASE_URL (a Neon connection string) when prompted.
