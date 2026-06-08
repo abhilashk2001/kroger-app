@@ -77,6 +77,8 @@ churn-risk badge.
 API runs them through the same streaming loader as the CLI and reports the row counts.
 *(Loading replaces the current dataset; see [Limitations](#limitations).)*
 
+![Load Data](docs/deploy/screenshots/load-data.png)
+
 **Dashboard.** Six aggregate panels: spend over time, spend by department, brand and
 organic mix, and average spend per household by income band and loyalty membership.
 
